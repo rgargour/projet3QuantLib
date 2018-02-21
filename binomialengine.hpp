@@ -162,7 +162,6 @@ namespace QuantLib {
 		/////////////// begin of changes //////////////////
 		option.rollback(grid[0]);
 		Array value0(option.values());
-		std::cout << "the size of the nodes at t=0 is " << value0.size() << std::endl;
 		QL_ENSURE(value0.size() == 3, "Expect 3 nodes in grid at step 0");
 		Real p0u = value0[2]; // up
 		Real p0 = value0[1];  // mid
@@ -176,7 +175,6 @@ namespace QuantLib {
 		Real deltaU = (p0u - p0) / (s0u - s0m);
 		Real deltaD = (p0 - p0d) / (s0m - s0d);
 		Real gamma = (2 * (deltaU - deltaD)) / (s0u - s0d);
-		//gamma = 0.2;
 		/////////////// end of changes //////////////////
 
 		// Store results
