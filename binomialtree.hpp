@@ -67,7 +67,7 @@ namespace QuantLib {
 			Size steps)
 			: BinomialTree_2<T>(process, end, steps) {}
 		Real underlying(Size i, Size index) const {
-			BigInteger j = 2 * BigInteger(index) - BigInteger(i);
+			BigInteger j = 2 * BigInteger(index) - BigInteger(i) - BigInteger(2);
 			// exploiting the forward value tree centering
 			return this->x0_*std::exp(i*this->driftPerStep_ + j * this->up_);
 		}
@@ -88,7 +88,7 @@ namespace QuantLib {
 			Size steps)
 			: BinomialTree_2<T>(process, end, steps) {}
 		Real underlying(Size i, Size index) const {
-			BigInteger j = 2 * BigInteger(index) - BigInteger(i);
+			BigInteger j = 2 * BigInteger(index) - BigInteger(i) - BigInteger(2);
 			// exploiting equal jump and the x0_ tree centering
 			return this->x0_*std::exp(j*this->dx_);
 		}
