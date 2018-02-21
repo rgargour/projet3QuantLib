@@ -156,8 +156,8 @@ namespace QuantLib {
 			Size steps,
 			Real strike);
 		Real underlying(Size i, Size index) const {
-			return x0_ * std::pow(down_, Real(BigInteger(i) - BigInteger(index)))
-				* std::pow(up_, Real(index));
+			return x0_ * std::pow(down_, Real(BigInteger(i) - BigInteger(index) + BigInteger(1)))
+				* std::pow(up_, Real(index) - Real(1));
 		};
 		Real probability(Size, Size, Size branch) const {
 			return (branch == 1 ? pu_ : pd_);
@@ -175,8 +175,8 @@ namespace QuantLib {
 			Size steps,
 			Real strike);
 		Real underlying(Size i, Size index) const {
-			return x0_ * std::pow(down_, Real(BigInteger(i) - BigInteger(index)))
-				* std::pow(up_, Real(index));
+			return x0_ * std::pow(down_, Real(BigInteger(i) - BigInteger(index) + BigInteger(1)))
+				* std::pow(up_, Real(index) - Real(1));
 		}
 		Real probability(Size, Size, Size branch) const {
 			return (branch == 1 ? pu_ : pd_);
@@ -193,8 +193,8 @@ namespace QuantLib {
 			Size steps,
 			Real strike);
 		Real underlying(Size i, Size index) const {
-			return x0_ * std::pow(down_, Real(BigInteger(i) - BigInteger(index)))
-				* std::pow(up_, Real(index));
+			return x0_ * std::pow(down_, Real(BigInteger(i) - BigInteger(index) + BigInteger(1)))
+				* std::pow(up_, Real(index) - Real(1));
 		}
 		Real probability(Size, Size, Size branch) const {
 			return (branch == 1 ? pu_ : pd_);

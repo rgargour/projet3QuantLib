@@ -165,17 +165,12 @@ namespace QuantLib {
 		std::cout << "the size of the nodes at t=0 is " << value0.size() << std::endl;
 		QL_ENSURE(value0.size() == 3, "Expect 3 nodes in grid at step 0");
 		Real p0u = value0[2]; // up
-		std::cout << "the up value is " << p0u << std::endl;
 		Real p0 = value0[1];  // mid
-		std::cout << "the mid value is " << p0 << std::endl;
 		Real p0d = value0[0]; // down
-		std::cout << "the down value is " << p0d << std::endl;
-		Real s0u = lattice->underlying(0, 1); // up
-		std::cout << "the up value of the underlying is " << s0u << std::endl;
-		Real s0m = lattice->underlying(0, 0); // mid
-		std::cout << "the mid value of the underlying is " << s0m << std::endl;
-		Real s0d = lattice->underlying(0, -1); // down
-		std::cout << "the down value of the underlying is " << s0d << std::endl;
+		Real s0u = lattice->underlying(0, 2); // up
+		Real s0m = lattice->underlying(0, 1); // mid
+		Real s0d = lattice->underlying(0, 0); // down
+		
 		// calculate delta and gamma
 		Real delta = (p0u - p0d) / ((s0u - s0d));
 		Real deltaU = (p0u - p0) / (s0u - s0m);
