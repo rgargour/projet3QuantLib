@@ -12,6 +12,7 @@
 #include <ql/pricingengines/vanilla/fdamericanengine.hpp>
 #include <ql/pricingengines/vanilla/mceuropeanengine.hpp>
 #include <ql/pricingengines/vanilla/mcamericanengine.hpp>
+#include <ql/pricingengines/vanilla/analytichestonengine.hpp>
 #include <ql/time/calendars/target.hpp>
 #include <ql/math/distributions/binomialdistribution.hpp>
 #include <ql/stochasticprocess.hpp>
@@ -30,7 +31,7 @@ using std::endl;
 
 using namespace QuantLib;
 
-int main() {
+int main_() {
 
 	try {
 		Size widths[] = { 35, 14, 14, 14 };
@@ -44,7 +45,7 @@ int main() {
 		Settings::instance().evaluationDate() = todaysDate;
 
 		// our options
-		Option::Type type(Option::Put);
+		Option::Type type(Option::Call);
 		Real underlying = 36;
 		Real strike = 40;
 		Spread dividendYield = 0.00;
@@ -54,18 +55,18 @@ int main() {
 		DayCounter dayCounter = Actual365Fixed();
 
 		// to display the caracteristics of the option
-		std::cout << "Option type =                " << type << std::endl;
-		std::cout << "Maturity =                   " << maturity << std::endl;
-		std::cout << "Underlying price =           " << underlying << std::endl;
-		std::cout << "Strike =                     " << strike << std::endl;
-		std::cout << "Risk-free interest rate =    " << io::rate(riskFreeRate) << std::endl;
-		std::cout << "Dividend yield =             " << io::rate(dividendYield) << std::endl;
-		std::cout << "Volatility =                 " << io::volatility(volatility) << std::endl;
+		std::cout << "Option type =                " <<  type                       << std::endl;
+		std::cout << "Maturity =                   " <<  maturity                   << std::endl;
+		std::cout << "Underlying price =           " <<  underlying                 << std::endl;
+		std::cout << "Strike =                     " <<  strike                     << std::endl;
+		std::cout << "Risk-free interest rate =    " <<  io::rate(riskFreeRate)     << std::endl;
+		std::cout << "Dividend yield =             " <<  io::rate(dividendYield)    << std::endl;
+		std::cout << "Volatility =                 " <<  io::volatility(volatility) << std::endl;
 
 		std::cout << std::endl;
 		std::string method;
 		std::cout << std::endl;
-
+		
 		//// daclare the 3 types of option-exercice: european, bermudan and american
 		std::vector<Date> exerciseDates;
 		for (Integer i = 1; i <= 4; i++)
@@ -80,7 +81,6 @@ int main() {
 		boost::shared_ptr<Exercise> americanExercise(
 			new AmericanExercise(settlementDate,
 				maturity));
-
 
 
 		Handle<Quote> underlyingH(
@@ -102,6 +102,10 @@ int main() {
 		boost::shared_ptr<BlackScholesMertonProcess> bsmProcess(
 			new BlackScholesMertonProcess(underlyingH, flatDividendTS,
 				flatTermStructure, flatVolTS));
+		// reference options
+		VanillaOption EuropeanOption_blackScholes(payoff, europeanExercise);
+
+
 
 		// declare 3 types of options for each calculation method
 		VanillaOption europeanOption_Tian_old(payoff, europeanExercise);
@@ -112,6 +116,8 @@ int main() {
 		VanillaOption bermudanOption_Tian_new(payoff, bermudanExercise);
 		VanillaOption americanOption_Tian_new(payoff, americanExercise);
 
+		
+		/*
 		VanillaOption europeanOption_LeisenReimer_old(payoff, europeanExercise);
 		VanillaOption bermudanOption_LeisenReimer_old(payoff, bermudanExercise);
 		VanillaOption americanOption_LeisenReimer_old(payoff, americanExercise);
@@ -127,23 +133,32 @@ int main() {
 		VanillaOption europeanOption_Joshi4_new(payoff, europeanExercise);
 		VanillaOption bermudanOption_Joshi4_new(payoff, bermudanExercise);
 		VanillaOption americanOption_Joshi4_new(payoff, americanExercise);
+		*/
+		/////////////////////// reference options //////////////////
+		EuropeanOption_blackScholes.setPricingEngine(boost::shared_ptr<PricingEngine>(
+			new AnalyticEuropeanEngine(bsmProcess)));
+
 
 		/////////////////////// Tian method  ///////////////////////
 		method = "Binomial Tian";
-		Size timeSteps = 2;
+		Size timeSteps = 1000;
 		europeanOption_Tian_old.setPricingEngine(boost::shared_ptr<PricingEngine>(
-			new BinomialVanillaEngine<Tian>(bsmProcess, timeSteps)));
+			new BinomialVanillaEngine<Joshi4>(bsmProcess, timeSteps)));
 		bermudanOption_Tian_old.setPricingEngine(boost::shared_ptr<PricingEngine>(
-			new BinomialVanillaEngine<Tian>(bsmProcess, timeSteps)));
+			new BinomialVanillaEngine<Joshi4>(bsmProcess, timeSteps)));
 		americanOption_Tian_old.setPricingEngine(boost::shared_ptr<PricingEngine>(
-			new BinomialVanillaEngine<Tian>(bsmProcess, timeSteps)));
+			new BinomialVanillaEngine<Joshi4>(bsmProcess, timeSteps)));
 
 		europeanOption_Tian_new.setPricingEngine(boost::shared_ptr<PricingEngine>(
-			new BinomialVanillaEngine_2<Tian_2>(bsmProcess, timeSteps)));
+			new BinomialVanillaEngine_2<Joshi4_2>(bsmProcess, timeSteps)));
 		bermudanOption_Tian_new.setPricingEngine(boost::shared_ptr<PricingEngine>(
-			new BinomialVanillaEngine_2<Tian_2>(bsmProcess, timeSteps)));
+			new BinomialVanillaEngine_2<Joshi4_2>(bsmProcess, timeSteps)));
 		americanOption_Tian_new.setPricingEngine(boost::shared_ptr<PricingEngine>(
-			new BinomialVanillaEngine_2<Tian_2>(bsmProcess, timeSteps)));
+			new BinomialVanillaEngine_2<Joshi4_2>(bsmProcess, timeSteps)));
+
+
+
+
 
 		std::cout << std::setw(widths[0]) << std::left << "Method"
 			<< std::setw(widths[1]) << std::left << "European"
@@ -166,11 +181,12 @@ int main() {
 
 		std::cout << "Delta calculated with the old method = " << europeanOption_Tian_old.delta() << std::endl;
 		std::cout << "Delta calculated with the new method = " << europeanOption_Tian_new.delta() << std::endl;
+		std::cout << "Delta calculated with Black and Scholes method = " << EuropeanOption_blackScholes.delta() << std::endl;
 
-
+		
 
 		std::cin.ignore();
-
+		
 		return 0;
 
 	}
