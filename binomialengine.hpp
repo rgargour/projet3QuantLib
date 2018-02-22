@@ -1,6 +1,5 @@
 #pragma once
 
-
 /* -*- mode: c++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
 /*
@@ -122,59 +121,25 @@ namespace QuantLib {
 
 		option.initialize(lattice, maturity);
 
-		// Partial derivatives calculated from various points in the
-		// binomial tree 
-		// (see J.C.Hull, "Options, Futures and other derivatives", 6th edition, pp 397/398)
-
-		// Rollback to third-last step, and get underlying prices (s2) &
-		// option values (p2) at this point
-		/*option.rollback(grid[2]);
-		Array va2(option.values());
-		QL_ENSURE(va2.size() == 3, "Expect 3 nodes in grid at second step");
-		Real p2u = va2[2]; // up
-		Real p2m = va2[1]; // mid
-		Real p2d = va2[0]; // down (low)
-		Real s2u = lattice->underlying(2, 2); // up price
-		Real s2m = lattice->underlying(2, 1); // middle price
-		Real s2d = lattice->underlying(2, 0); // down (low) price
-
-		// calculate gamma by taking the first derivate of the two deltas
-		Real delta2u = (p2u - p2m) / (s2u - s2m);
-		Real delta2d = (p2m - p2d) / (s2m - s2d);
-		Real gamma = (delta2u - delta2d) / ((s2u - s2d) / 2);
-
-		// Rollback to second-last step, and get option values (p1) at
-		// this point
-		option.rollback(grid[1]);
-		Array va(option.values());
-		QL_ENSURE(va.size() == 2, "Expect 2 nodes in grid at first step");
-		Real p1u = va[1];
-		Real p1d = va[0];
-		Real s1u = lattice->underlying(1, 1); // up (high) price
-		Real s1d = lattice->underlying(1, 0); // down (low) price
-
-		Real delta = (p1u - p1d) / (s1u - s1d);
-
-		// Finally, rollback to t=0
-		option.rollback(0.0);
-		Real p0 = option.presentValue();
-		*/
+		
 		/////////////// begin of changes //////////////////
 		option.rollback(grid[0]);
 		Array value0(option.values());
+		
 		QL_ENSURE(value0.size() == 3, "Expect 3 nodes in grid at step 0");
 		Real p0u = value0[2]; // up
 		Real p0 = value0[1];  // mid
 		Real p0d = value0[0]; // down
+		
 		Real s0u = lattice->underlying(0, 2); // up
 		Real s0m = lattice->underlying(0, 1); // mid
 		Real s0d = lattice->underlying(0, 0); // down
 		
 		// calculate delta and gamma
-		Real delta = (p0u - p0d) / ((s0u - s0d));
-		Real deltaU = (p0u - p0) / (s0u - s0m);
-		Real deltaD = (p0 - p0d) / (s0m - s0d);
-		Real gamma = (2 * (deltaU - deltaD)) / (s0u - s0d);
+
+		Real delta = ((s0d - s0m) / ((s0u - s0m) * (s0d - s0u)))* p0u + ((s0m - s0u) / ((s0d - s0m) * (s0d - s0u)))* p0d - ((s0u + s0d - 2 * s0m) / ((s0u - s0m) * (s0d - s0m)))* p0;
+		Real gamma = 2 * ((s0d - s0u) * p0 - (s0d - s0m) * p0u + (s0u - s0m) * p0d) / ((s0u - s0m)*(s0d - s0u)*(s0d - s0m));
+
 		/////////////// end of changes //////////////////
 
 		// Store results
