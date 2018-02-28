@@ -137,7 +137,7 @@ namespace QuantLib {
 		
 		// calculate delta and gamma
 
-		Real delta = ((s0d - s0m) / ((s0u - s0m) * (s0d - s0u)))* p0u + ((s0m - s0u) / ((s0d - s0m) * (s0d - s0u)))* p0d - ((s0u + s0d - 2 * s0m) / ((s0u - s0m) * (s0d - s0m)))* p0;
+		Real delta = ((s0m - s0d) / ((s0u - s0m) * (s0u - s0d)))* p0u - ((s0u - s0m) / ((s0m - s0d) * (s0u - s0d)))* p0d + ((s0u + s0d - 2 * s0m) / ((s0u - s0m) * (s0m - s0d)))* p0;
 		Real gamma = 2 * ((s0d - s0u) * p0 - (s0d - s0m) * p0u + (s0u - s0m) * p0d) / ((s0u - s0m)*(s0d - s0u)*(s0d - s0m));
 
 		/////////////// end of changes //////////////////

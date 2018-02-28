@@ -17,7 +17,8 @@
 #include <ql/math/distributions/binomialdistribution.hpp>
 #include <ql/stochasticprocess.hpp>
 #include <ql/utilities/dataformatters.hpp>
-
+#include <ql/pricingengines/vanilla/baroneadesiwhaleyengine.hpp>
+#include <ql/pricingengines/vanilla/bjerksundstenslandengine.hpp>
 #include "binomialtree.hpp"
 #include "binomialengine.hpp"
 #include <ql/methods/lattices/binomialtree.hpp>
@@ -34,7 +35,7 @@ using std::endl;
 
 using namespace QuantLib;
 
-int main_1() {
+int main_3() {
 
 	try {
 		Size widths[] = { 35, 14, 14, 14 };
@@ -71,10 +72,11 @@ int main_1() {
 		cout << endl;
 
 
-		boost::shared_ptr<Exercise> europeanExercise(
-			new EuropeanExercise(maturity));
 
-		
+		boost::shared_ptr<Exercise> americanExercise(
+			new AmericanExercise(settlementDate,
+				maturity));
+
 		Handle<Quote> underlyingH(
 			boost::shared_ptr<Quote>(new SimpleQuote(underlying)));
 
@@ -94,66 +96,46 @@ int main_1() {
 		boost::shared_ptr<BlackScholesMertonProcess> bsmProcess(
 			new BlackScholesMertonProcess(underlyingH, flatDividendTS,
 				flatTermStructure, flatVolTS));
-		
-		// reference options
-		VanillaOption EuropeanOption_blackScholes(payoff, europeanExercise);
 
 
-
-		// declare of options 
-		VanillaOption europeanOption_Tian_old(payoff, europeanExercise);
-		
-		VanillaOption europeanOption_Tian_new(payoff, europeanExercise);
-		
-
-		/////////////////////// reference options //////////////////
-		EuropeanOption_blackScholes.setPricingEngine(boost::shared_ptr<PricingEngine>(
-			new AnalyticEuropeanEngine(bsmProcess)));
-
-
-		/////////////////////// Tian method  ///////////////////////
-		cout << "Method =                     " << "Tian" << endl;
+		// declare options 
 		Size timeSteps = 1000;
-
-		// calculate the runtime of the old method
-		__int64 BeginTime_oldMethod = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-		europeanOption_Tian_old.setPricingEngine(boost::shared_ptr<PricingEngine>(
+		// binomial tree tian 
+		VanillaOption americanOption_old_Tian(payoff, americanExercise);
+		americanOption_old_Tian.setPricingEngine(boost::shared_ptr<PricingEngine>(
 			new BinomialVanillaEngine<Tian>(bsmProcess, timeSteps)));
-		__int64 EndTime_oldMethod = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-		
 
-	
-		// calculate the runtime of the new method
-		__int64 BeginTime_newMethod = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-		europeanOption_Tian_new.setPricingEngine(boost::shared_ptr<PricingEngine>(
+		VanillaOption americanOption_new_Tian(payoff, americanExercise);
+		americanOption_new_Tian.setPricingEngine(boost::shared_ptr<PricingEngine>(
 			new BinomialVanillaEngine_2<Tian_2>(bsmProcess, timeSteps)));
-		__int64 EndTime_newMethod = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-	
-		
 
-		// reference values 
-		cout << "Black & Scholes Method" << endl;
-		cout << "Delta calculated with Black and Scholes method = " << std::scientific << EuropeanOption_blackScholes.delta() << endl;
-		cout << "Gamma calculated with Black and Scholes method = " << std::scientific << EuropeanOption_blackScholes.gamma() << endl;
-		cout << endl;
+		VanillaOption americanOption_BaroneAdesiWhaley(payoff, americanExercise);
+		americanOption_BaroneAdesiWhaley.setPricingEngine(boost::shared_ptr<PricingEngine>(
+			new BaroneAdesiWhaleyApproximationEngine(bsmProcess)));
+
+		VanillaOption americanOption_BjerksundStensland(payoff, americanExercise);
+		americanOption_BjerksundStensland.setPricingEngine(boost::shared_ptr<PricingEngine>(
+			new BjerksundStenslandApproximationEngine(bsmProcess)));
+
+		VanillaOption americanOption_FDA(payoff, americanExercise);
+		americanOption_FDA.setPricingEngine(boost::shared_ptr<PricingEngine>(
+			new FDAmericanEngine<CrankNicolson>(bsmProcess,
+				timeSteps, timeSteps - 1)));
 
 		// statistics for the old method
 		cout << "Binomial Tree (Tian) Old method " << endl;
-		cout << "Old method runtime (ms) = " << EndTime_oldMethod - BeginTime_oldMethod << endl;
-		cout << "Delta calculated with the old method = " << std::scientific << europeanOption_Tian_old.delta() << endl;
-		cout << "R_BS_delta for the old method = " << std::scientific << (europeanOption_Tian_old.delta() - EuropeanOption_blackScholes.delta()) / EuropeanOption_blackScholes.delta() << endl;
-		cout << "Gamma calculated with the old method = " << std::scientific << europeanOption_Tian_old.gamma() << endl;
-		cout << "R_BS_gamma for the old method = " << std::scientific << (europeanOption_Tian_old.gamma() - EuropeanOption_blackScholes.gamma()) / EuropeanOption_blackScholes.gamma() << endl;
+		cout << "Delta  = " << std::scientific << americanOption_old_Tian.delta() << endl;
+		cout << "Binomial Tree (Tian) New method " << endl;
+		cout << "Delta  = " << std::scientific << americanOption_new_Tian.delta() << endl;
+		cout << "Barone-Adesi/Whaley" << endl;
+		cout << "Delta  = " << std::scientific << americanOption_BaroneAdesiWhaley.delta() << endl;
+		cout << "Bjerksund/Stensland" << endl;
+		cout << "Delta  = " << std::scientific << americanOption_BjerksundStensland.delta() << endl;
+		cout << "Finite differences" << endl;
+		cout << "Delta  = " << std::scientific << americanOption_FDA.delta() << endl;
 		cout << endl;
 
-		// statistics for the new method
-		cout << "Binomial Tree (Tian) New method " << endl;
-		cout << "New method runtime (ms) = " << EndTime_newMethod - BeginTime_newMethod << endl;
-		cout << "Delta calculated with the new method = " << std::scientific << europeanOption_Tian_new.delta() << endl;
-		cout << "R_BS_delta for the new method = " << std::scientific <<(europeanOption_Tian_new.delta() - EuropeanOption_blackScholes.delta()) / EuropeanOption_blackScholes.delta() << endl;
-		cout << "Gamma calculated with the new method = " << std::scientific << europeanOption_Tian_new.gamma() << endl;
-		cout << "R_BS_gamma for the new method = " << std::scientific << (europeanOption_Tian_new.gamma() - EuropeanOption_blackScholes.gamma()) / EuropeanOption_blackScholes.gamma() << endl;
-
+		
 
 		std::cin.ignore();
 
