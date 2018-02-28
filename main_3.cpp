@@ -124,14 +124,19 @@ int main_3() {
 
 		// statistics for the old method
 		cout << "Binomial Tree (Tian) Old method " << endl;
+		cout << "Option price  = " << std::scientific << americanOption_old_Tian.NPV() << endl;
 		cout << "Delta  = " << std::scientific << americanOption_old_Tian.delta() << endl;
 		cout << "Binomial Tree (Tian) New method " << endl;
+		cout << "Option price  = " << std::scientific << americanOption_new_Tian.NPV() << endl;
 		cout << "Delta  = " << std::scientific << americanOption_new_Tian.delta() << endl;
 		cout << "Barone-Adesi/Whaley" << endl;
+		cout << "Option price  = " << std::scientific << americanOption_BaroneAdesiWhaley.NPV() << endl;
 		cout << "Delta  = " << std::scientific << americanOption_BaroneAdesiWhaley.delta() << endl;
 		cout << "Bjerksund/Stensland" << endl;
+		cout << "Option price  = " << std::scientific << americanOption_BjerksundStensland.NPV() << endl;
 		cout << "Delta  = " << std::scientific << americanOption_BjerksundStensland.delta() << endl;
 		cout << "Finite differences" << endl;
+		cout << "Option price  = " << std::scientific << americanOption_FDA.NPV() << endl;
 		cout << "Delta  = " << std::scientific << americanOption_FDA.delta() << endl;
 		cout << endl;
 

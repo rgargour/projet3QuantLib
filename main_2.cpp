@@ -103,6 +103,7 @@ int main_2() {
 			new AnalyticEuropeanEngine(bsmProcess)));
 		// reference values 
 		cout << "Black & Scholes Method" << endl;
+		cout << "Option price calculated with  Black and Scholes method = " << std::scientific << EuropeanOption_blackScholes.NPV() << endl;
 		cout << "Delta calculated with Black and Scholes method = " << std::scientific << EuropeanOption_blackScholes.delta() << endl;
 		cout << "Gamma calculated with Black and Scholes method = " << std::scientific << EuropeanOption_blackScholes.gamma() << endl;
 		cout << endl;
@@ -126,6 +127,7 @@ int main_2() {
 
 		// statistics for the old method
 		cout << "Binomial Tree (Tian) Old method " << endl;
+		cout << "Option price calculated with the old method = " << std::scientific << europeanOption_Tian_old.NPV() << endl;
 		cout << "Delta calculated with the old method = " << std::scientific << europeanOption_Tian_old.delta() << endl;
 		cout << "R_BS_delta for the old method = " << std::scientific << (europeanOption_Tian_old.delta() - EuropeanOption_blackScholes.delta()) / EuropeanOption_blackScholes.delta() << endl;
 		cout << "Gamma calculated with the old method = " << std::scientific << europeanOption_Tian_old.gamma() << endl;
@@ -134,6 +136,7 @@ int main_2() {
 
 		// statistics for the new method
 		cout << "Binomial Tree (Tian) New method " << endl;
+		cout << "Option price calculated with the new method = " << std::scientific << europeanOption_Tian_new.NPV() << endl;
 		cout << "Delta calculated with the new method = " << std::scientific << europeanOption_Tian_new.delta() << endl;
 		cout << "R_BS_delta for the new method = " << std::scientific << (europeanOption_Tian_new.delta() - EuropeanOption_blackScholes.delta()) / EuropeanOption_blackScholes.delta() << endl;
 		cout << "Gamma calculated with the new method = " << std::scientific << europeanOption_Tian_new.gamma() << endl;
@@ -160,6 +163,7 @@ int main_2() {
 
 		// statistics for the old method
 		cout << "Binomial Tree (Joshi4) Old method " << endl;
+		cout << "Option price calculated with the old method = " << std::scientific << europeanOption_Joshi4_old.NPV() << endl;
 		cout << "Delta calculated with the old method = " << std::scientific << europeanOption_Joshi4_old.delta() << endl;
 		cout << "R_BS_delta for the old method = " << std::scientific << (europeanOption_Joshi4_old.delta() - EuropeanOption_blackScholes.delta()) / EuropeanOption_blackScholes.delta() << endl;
 		cout << "Gamma calculated with the old method = " << std::scientific << europeanOption_Joshi4_old.gamma() << endl;
@@ -168,6 +172,7 @@ int main_2() {
 
 		// statistics for the new method
 		cout << "Binomial Tree (Joshi4) New method " << endl;
+		cout << "Option price calculated with the new method = " << std::scientific << europeanOption_Joshi4_new.NPV() << endl;
 		cout << "Delta calculated with the new method = " << std::scientific << europeanOption_Joshi4_new.delta() << endl;
 		cout << "R_BS_delta for the new method = " << std::scientific << (europeanOption_Joshi4_new.delta() - EuropeanOption_blackScholes.delta()) / EuropeanOption_blackScholes.delta() << endl;
 		cout << "Gamma calculated with the new method = " << std::scientific << europeanOption_Joshi4_new.gamma() << endl;
@@ -192,6 +197,7 @@ int main_2() {
 
 		// statistics for the old method
 		cout << "Binomial Tree (LeisenReimer) Old method " << endl;
+		cout << "Option price calculated with the old method = " << std::scientific << europeanOption_LeisenReimer_old.NPV() << endl;
 		cout << "Delta calculated with the old method = " << std::scientific << europeanOption_LeisenReimer_old.delta() << endl;
 		cout << "R_BS_delta for the old method = " << std::scientific << (europeanOption_LeisenReimer_old.delta() - EuropeanOption_blackScholes.delta()) / EuropeanOption_blackScholes.delta() << endl;
 		cout << "Gamma calculated with the old method = " << std::scientific << europeanOption_LeisenReimer_old.gamma() << endl;
@@ -200,6 +206,7 @@ int main_2() {
 
 		// statistics for the new method
 		cout << "Binomial Tree (LeisenReimer) New method " << endl;
+		cout << "Option price calculated with the new method = " << std::scientific << europeanOption_LeisenReimer_new.NPV() << endl;
 		cout << "Delta calculated with the new method = " << std::scientific << europeanOption_LeisenReimer_new.delta() << endl;
 		cout << "R_BS_delta for the new method = " << std::scientific << (europeanOption_LeisenReimer_new.delta() - EuropeanOption_blackScholes.delta()) / EuropeanOption_blackScholes.delta() << endl;
 		cout << "Gamma calculated with the new method = " << std::scientific << europeanOption_LeisenReimer_new.gamma() << endl;
@@ -226,6 +233,7 @@ int main_2() {
 
 		// statistics for the old method
 		cout << "Binomial Tree (JarrowRudd) Old method " << endl;
+		cout << "Option price calculated with the old method = " << std::scientific << europeanOption_JarrowRudd_old.NPV() << endl;
 		cout << "Delta calculated with the old method = " << std::scientific << europeanOption_JarrowRudd_old.delta() << endl;
 		cout << "R_BS_delta for the old method = " << std::scientific << (europeanOption_JarrowRudd_old.delta() - EuropeanOption_blackScholes.delta()) / EuropeanOption_blackScholes.delta() << endl;
 		cout << "Gamma calculated with the old method = " << std::scientific << europeanOption_JarrowRudd_old.gamma() << endl;
@@ -234,6 +242,7 @@ int main_2() {
 
 		// statistics for the new method
 		cout << "Binomial Tree (JarrowRudd) New method " << endl;
+		cout << "Option price calculated with the new method = " << std::scientific << europeanOption_JarrowRudd_new.NPV() << endl;
 		cout << "Delta calculated with the new method = " << std::scientific << europeanOption_JarrowRudd_new.delta() << endl;
 		cout << "R_BS_delta for the new method = " << std::scientific << (europeanOption_JarrowRudd_new.delta() - EuropeanOption_blackScholes.delta()) / EuropeanOption_blackScholes.delta() << endl;
 		cout << "Gamma calculated with the new method = " << std::scientific << europeanOption_JarrowRudd_new.gamma() << endl;

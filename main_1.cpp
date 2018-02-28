@@ -119,6 +119,9 @@ int main_1() {
 		__int64 BeginTime_oldMethod = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 		europeanOption_Tian_old.setPricingEngine(boost::shared_ptr<PricingEngine>(
 			new BinomialVanillaEngine<Tian>(bsmProcess, timeSteps)));
+		Real NPV_old = europeanOption_Tian_old.NPV();
+		Real delta_old = europeanOption_Tian_old.delta();
+		Real gamma_old = europeanOption_Tian_old.gamma();
 		__int64 EndTime_oldMethod = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 		
 
@@ -127,12 +130,16 @@ int main_1() {
 		__int64 BeginTime_newMethod = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 		europeanOption_Tian_new.setPricingEngine(boost::shared_ptr<PricingEngine>(
 			new BinomialVanillaEngine_2<Tian_2>(bsmProcess, timeSteps)));
+		Real NPV_new = europeanOption_Tian_new.NPV();
+		Real delta_new = europeanOption_Tian_new.delta();
+		Real gamma_new = europeanOption_Tian_new.gamma();
 		__int64 EndTime_newMethod = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 	
 		
 
 		// reference values 
 		cout << "Black & Scholes Method" << endl;
+		cout << "Price calculated with Black and Scholes method = " << std::scientific << EuropeanOption_blackScholes.NPV() << endl;
 		cout << "Delta calculated with Black and Scholes method = " << std::scientific << EuropeanOption_blackScholes.delta() << endl;
 		cout << "Gamma calculated with Black and Scholes method = " << std::scientific << EuropeanOption_blackScholes.gamma() << endl;
 		cout << endl;
@@ -140,19 +147,21 @@ int main_1() {
 		// statistics for the old method
 		cout << "Binomial Tree (Tian) Old method " << endl;
 		cout << "Old method runtime (ms) = " << EndTime_oldMethod - BeginTime_oldMethod << endl;
-		cout << "Delta calculated with the old method = " << std::scientific << europeanOption_Tian_old.delta() << endl;
-		cout << "R_BS_delta for the old method = " << std::scientific << (europeanOption_Tian_old.delta() - EuropeanOption_blackScholes.delta()) / EuropeanOption_blackScholes.delta() << endl;
-		cout << "Gamma calculated with the old method = " << std::scientific << europeanOption_Tian_old.gamma() << endl;
-		cout << "R_BS_gamma for the old method = " << std::scientific << (europeanOption_Tian_old.gamma() - EuropeanOption_blackScholes.gamma()) / EuropeanOption_blackScholes.gamma() << endl;
+		cout << "Option price calculated with the old method = " << std::scientific << NPV_old << endl;
+		cout << "Delta calculated with the old method = " << std::scientific << delta_old << endl;
+		cout << "R_BS_delta for the old method = " << std::scientific << (delta_old - EuropeanOption_blackScholes.delta()) / EuropeanOption_blackScholes.delta() << endl;
+		cout << "Gamma calculated with the old method = " << std::scientific << gamma_old << endl;
+		cout << "R_BS_gamma for the old method = " << std::scientific << (gamma_old - EuropeanOption_blackScholes.gamma()) / EuropeanOption_blackScholes.gamma() << endl;
 		cout << endl;
 
 		// statistics for the new method
 		cout << "Binomial Tree (Tian) New method " << endl;
 		cout << "New method runtime (ms) = " << EndTime_newMethod - BeginTime_newMethod << endl;
-		cout << "Delta calculated with the new method = " << std::scientific << europeanOption_Tian_new.delta() << endl;
-		cout << "R_BS_delta for the new method = " << std::scientific <<(europeanOption_Tian_new.delta() - EuropeanOption_blackScholes.delta()) / EuropeanOption_blackScholes.delta() << endl;
-		cout << "Gamma calculated with the new method = " << std::scientific << europeanOption_Tian_new.gamma() << endl;
-		cout << "R_BS_gamma for the new method = " << std::scientific << (europeanOption_Tian_new.gamma() - EuropeanOption_blackScholes.gamma()) / EuropeanOption_blackScholes.gamma() << endl;
+		cout << "Option price calculated with the new method = " << std::scientific << NPV_new << endl;
+		cout << "Delta calculated with the new method = " << std::scientific << delta_new << endl;
+		cout << "R_BS_delta for the new method = " << std::scientific <<(delta_new - EuropeanOption_blackScholes.delta()) / EuropeanOption_blackScholes.delta() << endl;
+		cout << "Gamma calculated with the new method = " << std::scientific << gamma_new << endl;
+		cout << "R_BS_gamma for the new method = " << std::scientific << (gamma_new - EuropeanOption_blackScholes.gamma()) / EuropeanOption_blackScholes.gamma() << endl;
 
 
 		std::cin.ignore();
